@@ -38,6 +38,9 @@ do
 	if [[ ! $line =~ ^[A-Z].* ]]; then
 		message_ok=false
 	fi
+	if [[ $line =~ [.]$ ]]; then
+		message_ok=false
+	fi
 	echo "$line"
 done < "$COMMIT_MESSAGE"
 echo "------------------------------------"
