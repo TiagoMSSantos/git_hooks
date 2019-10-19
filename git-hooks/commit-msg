@@ -26,14 +26,30 @@ echo "4 = $4"
 COMMIT_MESSAGE=$1
 readarray -t urls "${COMMIT_MESSAGE}"
 
-echo "START"
+echo "Commit message: "
 input="${COMMIT_MESSAGE}"
+message_ok=true
 while IFS= read -r line
 do
-	[[ $line =~ ^#.* ]] && continue
-  echo "$line"
+	if [ -z "$line" ]; then
+		continue
+	else
+		echo "$line"
+	fi
+	if [[ $line =~ ^\#.* ]]; then
+		break
+	fi
+	if [[ ! $line =~ ^[A-Z].* ]]; then
+		message_ok=false
+	fi
 done < "$input"
-echo "DONE"
+echo "------------------------------------"
+
+if [ "$message_ok" = false ] ; then
+	echo "BAD"
+else
+	echo "GOOD"
+fi
 
 test "" = "$(grep '^Signed-off-by: ' "$1" |
 	 sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
